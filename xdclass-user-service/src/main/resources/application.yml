@@ -1,0 +1,17 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: xdclass-user-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/xdclass?useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Mysql666!!
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    root: info
