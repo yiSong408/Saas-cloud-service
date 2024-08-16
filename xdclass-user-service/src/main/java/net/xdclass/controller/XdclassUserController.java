@@ -5,7 +5,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
+import net.xdclass.exception.BizException;
+import net.xdclass.model.XdclassUserDO;
 import net.xdclass.service.UserService;
+import net.xdclass.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,11 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class XdclassUserController {
     @Autowired
     private UserService userService;
+
     @ApiOperation("Get user detail by ID")
     @GetMapping("/find/{user_id}")
-    public Object detail(@ApiParam(value = "user ID",required = true)
-                             @PathVariable("user_id") Long userId) {
-        return userService.detail(userId);
+    public Object detail(@ApiParam(value = "user ID", required = true)
+                         @PathVariable("user_id") Long userId) {
+        XdclassUserDO detail = userService.detail(userId);
+
+        return JsonData.buildSuccess(detail);
     }
 }
 
