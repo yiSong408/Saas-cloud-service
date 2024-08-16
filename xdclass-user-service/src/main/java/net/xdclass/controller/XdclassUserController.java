@@ -28,10 +28,10 @@ public class XdclassUserController {
     @Autowired
     private UserService userService;
     @ApiOperation("Get user detail by ID")
-    @GetMapping("/find/{address_id}")
+    @GetMapping("/find/{user_id}")
     public Object detail(@ApiParam(value = "user ID",required = true)
-                             @PathVariable("address_id") Long addressId) {
-        return userService.detail(addressId);
+                             @PathVariable("user_id") Long userId) {
+        return userService.detail(userId);
     }
 }
 
