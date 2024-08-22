@@ -4,17 +4,23 @@ import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.xdclass.enums.BizCodeEnum;
+import net.xdclass.enums.SentCodeEnum;
+import net.xdclass.service.NotifyService;
 import net.xdclass.util.CommonUntil;
+import net.xdclass.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +32,9 @@ import java.util.concurrent.TimeUnit;
 public class NotifyController {
     @Autowired
     private Producer captchaProducer;
+
+    @Autowired
+    private NotifyService notifyService;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -48,6 +57,22 @@ public class NotifyController {
             outputStream.close();
         } catch (IOException e) {
             log.error("=== Captcha error ===");
+        }
+    }
+
+    @ApiOperation("Send verify code to email")
+    @GetMapping("send_code")
+    public JsonData sendRegisterCode(@RequestParam(value = "to") String to,
+                                     @RequestParam(value = "captcha") String captcha,
+                                     HttpServletRequest request) {
+        String captchaKey = getCaptchaKey(request);
+        String cacheCaptcha = redisTemplate.opsForValue().get(captchaKey);
+        if (cacheCaptcha != null && captchaKey != null && captcha.equals(cacheCaptcha)) {
+            redisTemplate.delete(captchaKey);
+            JsonData jsonData = notifyService.sendCode(SentCodeEnum.USER_REGISTER, to);
+            return jsonData;
+        } else {
+            return JsonData.buildResult(BizCodeEnum.CODE_CAPTCHA);
         }
     }
 

@@ -6,5 +6,6 @@
     <li>Lombok</li>
     <li>Mysql</li>
     <li>Mybatis Plus</li>
+    <li>Redis</li>
 </ul>
 
