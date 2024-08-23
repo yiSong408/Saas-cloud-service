@@ -11,12 +11,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>xdclass-common</module>
-        <module>xdclass-product-service</module>
-        <module>xdclass-user-service</module>
-        <module>xdclass-order-service</module>
-        <module>xdclass-coupon-service</module>
-        <module>xdclass-gateway</module>
+        <module>common</module>
+        <module>product-service</module>
+        <module>user-service</module>
+        <module>order-service</module>
+        <module>coupon-service</module>
+        <module>gateway</module>
     </modules>
 
     <properties>

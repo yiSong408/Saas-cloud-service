@@ -7,5 +7,7 @@
     <li>Mysql</li>
     <li>Mybatis Plus</li>
     <li>Redis</li>
+    <li>Amazon S3 buckets</li>
+    <li>Amazon S3 EC2</li>
 </ul>
 
