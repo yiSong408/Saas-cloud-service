@@ -2,7 +2,7 @@ package net.cloud.biz;
 
 import lombok.extern.slf4j.Slf4j;
 import net.cloud.UserApplication;
-import net.cloud.model.XdclassUserDO;
+import net.cloud.model.UserDO;
 import net.cloud.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class UserTest {
     private UserService userService;
     @Test
     public void testUserDetail(){
-        XdclassUserDO detail = userService.detail(1L);
+        UserDO detail = userService.detail(1L);
         log.info(detail.toString());
         Assert.assertNotNull(detail);
     }

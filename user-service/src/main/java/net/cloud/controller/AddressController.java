@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "Address module")
 @RestController
 @RequestMapping("/api/user/v1")
-public class XdclassAddressController {
+public class AddressController {
 
 }
 

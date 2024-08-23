@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.Random;
+import java.util.UUID;
 
 public class CommonUntil {
     public static String getIpAddr(HttpServletRequest request) {
@@ -63,6 +64,10 @@ public class CommonUntil {
             sb.append(source.charAt(random.nextInt(9)));
         }
         return sb.toString();
+    }
+
+    public static String generateUUid(){
+        return UUID.randomUUID().toString().replaceAll("-","").substring(0,32);
     }
 
 }

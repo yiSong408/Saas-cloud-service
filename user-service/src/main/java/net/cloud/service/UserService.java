@@ -1,8 +1,8 @@
 package net.cloud.service;
 
-import net.cloud.model.XdclassUserDO;
+import net.cloud.model.UserDO;
 
 public interface UserService {
 
-    XdclassUserDO detail(Long id);
+    UserDO detail(Long id);
 }

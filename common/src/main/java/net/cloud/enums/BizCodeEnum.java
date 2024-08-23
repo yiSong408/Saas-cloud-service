@@ -12,7 +12,8 @@ public enum BizCodeEnum {
     // account
     ACCOUNT_REPEAT(250001, "Account existed"),
     ACCOUNT_UNREGISTER(250002, "Account not exist"),
-    ACCOUNT_PWD_ERROR(250003, "Username or password incorrect");
+    ACCOUNT_PWD_ERROR(250003, "Username or password incorrect"),
+    UPLOAD_USER_IMG_FILE_FAIL(600101, "Fail to upload user avtar");
     @Getter
     private String message;
     @Getter

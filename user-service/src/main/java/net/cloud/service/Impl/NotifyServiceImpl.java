@@ -1,16 +1,7 @@
 package net.cloud.service.Impl;
 
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD:xdclass-user-service/src/main/java/net/xdclass/service/Impl/NotifyServiceImpl.java
-import net.xdclass.enums.BizCodeEnum;
-import net.xdclass.enums.SentCodeEnum;
-import net.xdclass.component.MailService;
-import net.xdclass.service.NotifyService;
-import net.xdclass.util.CheckUtil;
-import net.xdclass.util.CommonUntil;
-import net.xdclass.util.JsonData;
-import org.springframework.beans.factory.annotation.Autowired;
-=======
+
 import net.cloud.constant.CacheKey;
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.enums.SentCodeEnum;
@@ -22,7 +13,6 @@ import net.cloud.util.JsonData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
->>>>>>> 5313def (rename files):user-service/src/main/java/net/cloud/service/Impl/NotifyServiceImpl.java
 import org.springframework.stereotype.Service;
 
 @Service

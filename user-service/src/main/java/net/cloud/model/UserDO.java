@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("xdclass_user")
-public class XdclassUserDO implements Serializable {
+public class UserDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -27,7 +27,7 @@ public class SwaggerConfiguration {
                 .enable(true)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("net.xdclass"))
+                .apis(RequestHandlerSelectors.basePackage("net.cloud"))
                 .paths(PathSelectors.ant("/api/**"))
                 .build()
                 // swagger 3.0 only
@@ -44,7 +44,7 @@ public class SwaggerConfiguration {
                 .enable(true) // define if open swagger
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("net.xdclass"))
+                .apis(RequestHandlerSelectors.basePackage("net.cloud"))
                 .paths(PathSelectors.ant("/admin/**"))
                 .build();
     }

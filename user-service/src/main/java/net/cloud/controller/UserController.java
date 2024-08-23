@@ -4,25 +4,15 @@ package net.cloud.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-<<<<<<< HEAD:xdclass-user-service/src/main/java/net/xdclass/controller/XdclassUserController.java
-import lombok.Getter;
-import net.xdclass.exception.BizException;
-import net.xdclass.model.XdclassUserDO;
-import net.xdclass.service.UserService;
-import net.xdclass.util.JsonData;
-=======
+
 import net.cloud.enums.BizCodeEnum;
-import net.cloud.model.XdclassUserDO;
+import net.cloud.model.UserDO;
 import net.cloud.service.FileService;
 import net.cloud.service.UserService;
 import net.cloud.util.JsonData;
->>>>>>> 5313def (rename files):user-service/src/main/java/net/cloud/controller/XdclassUserController.java
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -35,17 +25,30 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "User module")
 @RestController
 @RequestMapping("/api/user/v1/")
-public class XdclassUserController {
+public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private FileService fileService;
 
     @ApiOperation("Get user detail by ID")
     @GetMapping("/find/{user_id}")
     public Object detail(@ApiParam(value = "user ID", required = true)
                          @PathVariable("user_id") Long userId) {
-        XdclassUserDO detail = userService.detail(userId);
+        UserDO detail = userService.detail(userId);
 
         return JsonData.buildSuccess(detail);
     }
+
+    @ApiOperation("Upload user avatar when register")
+    @PostMapping("upload")
+    public JsonData upload(@ApiParam(value = "upload avatar img",required = true)
+                           @RequestPart(name = "file")MultipartFile file){
+        String imgUrl = fileService.uploadUserImg(file);
+        return imgUrl!=null?JsonData.buildSuccess(imgUrl):JsonData.buildResult(BizCodeEnum.UPLOAD_USER_IMG_FILE_FAIL);
+    }
+
+
+
 }
 

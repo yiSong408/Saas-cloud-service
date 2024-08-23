@@ -1,6 +1,6 @@
 package net.cloud.mapper;
 
-import net.cloud.model.XdclassAddressDO;
+import net.cloud.model.AddressDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author Rongyi
  * @since 2024-08-13
  */
-public interface XdclassAddressMapper extends BaseMapper<XdclassAddressDO> {
+public interface AddressMapper extends BaseMapper<AddressDO> {
 
 }

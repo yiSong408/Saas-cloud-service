@@ -3,7 +3,7 @@
 <mapper namespace="net.xdclass.mapper.XdclassUserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="net.cloud.model.XdclassUserDO">
+    <resultMap id="BaseResultMap" type="net.cloud.model.UserDO">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="pwd" property="pwd" />

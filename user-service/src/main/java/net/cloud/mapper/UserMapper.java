@@ -1,6 +1,6 @@
 package net.cloud.mapper;
 
-import net.cloud.model.XdclassUserDO;
+import net.cloud.model.UserDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author Rongyi
  * @since 2024-08-13
  */
-public interface XdclassUserMapper extends BaseMapper<XdclassUserDO> {
+public interface UserMapper extends BaseMapper<UserDO> {
 
 }
