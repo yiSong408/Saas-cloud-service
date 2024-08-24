@@ -70,5 +70,8 @@ public class CommonUntil {
         return UUID.randomUUID().toString().replaceAll("-","").substring(0,32);
     }
 
+    public static long getCurrentTimestamp() {
+        return System.currentTimeMillis();
+    }
 }
 

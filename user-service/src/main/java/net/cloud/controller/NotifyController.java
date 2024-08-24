@@ -3,6 +3,7 @@ package net.cloud.controller;
 import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.enums.SentCodeEnum;
@@ -61,8 +62,8 @@ public class NotifyController {
 
     @ApiOperation("Send verify code to email")
     @GetMapping("send_code")
-    public JsonData sendRegisterCode(@RequestParam(value = "to") String to,
-                                     @RequestParam(value = "captcha") String captcha,
+    public JsonData sendRegisterCode(@ApiParam("target email address") @RequestParam(value = "to") String to,
+                                     @ApiParam("verify code") @RequestParam(value = "captcha") String captcha,
                                      HttpServletRequest request) {
         String captchaKey = getCaptchaKey(request);
         String cacheCaptcha = redisTemplate.opsForValue().get(captchaKey);

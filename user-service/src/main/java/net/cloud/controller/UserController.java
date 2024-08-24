@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.model.UserDO;
+import net.cloud.request.UserRegisterRequest;
 import net.cloud.service.FileService;
 import net.cloud.service.UserService;
 import net.cloud.util.JsonData;
@@ -42,12 +43,18 @@ public class UserController {
 
     @ApiOperation("Upload user avatar when register")
     @PostMapping("upload")
-    public JsonData upload(@ApiParam(value = "upload avatar img",required = true)
-                           @RequestPart(name = "file")MultipartFile file){
+    public JsonData upload(@ApiParam(value = "upload avatar img", required = true)
+                           @RequestPart(name = "file") MultipartFile file) {
         String imgUrl = fileService.uploadUserImg(file);
-        return imgUrl!=null?JsonData.buildSuccess(imgUrl):JsonData.buildResult(BizCodeEnum.UPLOAD_USER_IMG_FILE_FAIL);
+        return imgUrl != null ? JsonData.buildSuccess(imgUrl) : JsonData.buildResult(BizCodeEnum.UPLOAD_USER_IMG_FILE_FAIL);
     }
 
+    @ApiOperation("User register")
+    @PostMapping("register")
+    public JsonData register(@ApiParam("User register object")
+                             @RequestBody UserRegisterRequest registerRequest) {
+        return userService.register(registerRequest);
+    }
 
 
 }
