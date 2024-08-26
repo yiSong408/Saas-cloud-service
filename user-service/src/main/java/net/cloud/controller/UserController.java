@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.model.UserDO;
+import net.cloud.request.UserLoginRequest;
 import net.cloud.request.UserRegisterRequest;
 import net.cloud.service.FileService;
 import net.cloud.service.UserService;
@@ -54,6 +55,12 @@ public class UserController {
     public JsonData register(@ApiParam("User register object")
                              @RequestBody UserRegisterRequest registerRequest) {
         return userService.register(registerRequest);
+    }
+    @ApiOperation("User login")
+    @PostMapping("login")
+    public JsonData login(@ApiParam("User login object")
+                          @RequestBody UserLoginRequest loginRequest){
+        return userService.login(loginRequest);
     }
 
 

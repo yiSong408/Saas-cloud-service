@@ -44,7 +44,9 @@ public class UserDO implements Serializable {
     private Date createTime;
 
     private String mail;
-
+    /***
+     * salt value
+     */
     private String secret;
 
 

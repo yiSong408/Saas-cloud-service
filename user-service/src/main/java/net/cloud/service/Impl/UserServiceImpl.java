@@ -6,6 +6,7 @@ import net.cloud.enums.BizCodeEnum;
 import net.cloud.enums.SentCodeEnum;
 import net.cloud.mapper.UserMapper;
 import net.cloud.model.UserDO;
+import net.cloud.request.UserLoginRequest;
 import net.cloud.request.UserRegisterRequest;
 import net.cloud.service.NotifyService;
 import net.cloud.service.UserService;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -49,35 +51,54 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isNotBlank(registerRequest.getMail())) {
             checkCode = notifyService.checkCode(SentCodeEnum.USER_REGISTER, registerRequest.getMail(), registerRequest.getCode());
         }
-        if(!checkCode){
+        if (!checkCode) {
             return JsonData.buildResult(BizCodeEnum.CODE_TO_ERROR);
         }
 
         UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(registerRequest,userDO);
+        BeanUtils.copyProperties(registerRequest, userDO);
         userDO.setCreateTime(new Date());
         userDO.setSlogan("Default slogan");
-//        set password TODO
-        userDO.setPwd("$1$"+ CommonUntil.getRandomString(8));
-        String cryptPwd = Md5Crypt.md5Crypt(registerRequest.getPwd().getBytes(), userDO.getPwd());
+//        set password
+        userDO.setSecret("$1$" + CommonUntil.getRandomString(8));
+        String cryptPwd = Md5Crypt.md5Crypt(registerRequest.getPwd().getBytes(), userDO.getSecret());
         userDO.setPwd(cryptPwd);
 
 //        check if account is unique TODO
-        if(checkUnique(userDO.getMail())){
+        if (checkUnique(userDO.getMail())) {
             int rows = userMapper.insert(userDO);
-            log.info("rows:{}, register succeed:{}",rows,userDO.toString());
+            log.info("rows:{}, register succeed:{}", rows, userDO.toString());
 //        send credit
             userRegisterInitCredit(userDO);
             return JsonData.buildSuccess();
-        }else{
+        } else {
             return JsonData.buildResult(BizCodeEnum.ACCOUNT_REPEAT);
         }
     }
-    private boolean checkUnique(String mail){
-        return true;
+
+    @Override
+    public JsonData login(UserLoginRequest loginRequest) {
+        List<UserDO> list = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", loginRequest.getEmail()));
+        if(list!=null && list.size()==1){
+            String encodedPwd = Md5Crypt.md5Crypt(loginRequest.getPwd().getBytes(), list.get(0).getSecret());
+            if(encodedPwd.equals(list.get(0).getPwd())){
+                // login success
+                return JsonData.buildSuccess();
+            }else{
+                return JsonData.buildResult(BizCodeEnum.ACCOUNT_PWD_ERROR);
+            }
+        }else{
+         return JsonData.buildResult(BizCodeEnum.ACCOUNT_UNREGISTER);
+        }
     }
 
-    private void userRegisterInitCredit(UserDO userDO){
+    private boolean checkUnique(String mail) {
+        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<UserDO>().eq("mail", mail);
+        List<UserDO> list = userMapper.selectList(queryWrapper);
+        return list.size() < 1;
+    }
+
+    private void userRegisterInitCredit(UserDO userDO) {
 
     }
 }
