@@ -9,7 +9,9 @@ import net.cloud.model.UserDO;
 import net.cloud.request.UserRegisterRequest;
 import net.cloud.service.NotifyService;
 import net.cloud.service.UserService;
+import net.cloud.util.CommonUntil;
 import net.cloud.util.JsonData;
+import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,10 @@ public class UserServiceImpl implements UserService {
         userDO.setCreateTime(new Date());
         userDO.setSlogan("Default slogan");
 //        set password TODO
-//        userDO.setPwd();
+        userDO.setPwd("$1$"+ CommonUntil.getRandomString(8));
+        String cryptPwd = Md5Crypt.md5Crypt(registerRequest.getPwd().getBytes(), userDO.getPwd());
+        userDO.setPwd(cryptPwd);
+
 //        check if account is unique TODO
         if(checkUnique(userDO.getMail())){
             int rows = userMapper.insert(userDO);
@@ -69,7 +74,7 @@ public class UserServiceImpl implements UserService {
         }
     }
     private boolean checkUnique(String mail){
-
+        return true;
     }
 
     private void userRegisterInitCredit(UserDO userDO){

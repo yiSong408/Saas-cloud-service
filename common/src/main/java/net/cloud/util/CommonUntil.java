@@ -1,5 +1,7 @@
 package net.cloud.util;
 
+import sun.security.provider.MD5;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -72,6 +74,15 @@ public class CommonUntil {
 
     public static long getCurrentTimestamp() {
         return System.currentTimeMillis();
+    }
+    private static final String ALL_CHAR="1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    public static String getRandomString(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(ALL_CHAR.charAt(random.nextInt(ALL_CHAR.length())));
+        }
+        return sb.toString();
     }
 }
 

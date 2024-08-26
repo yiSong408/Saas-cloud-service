@@ -37,7 +37,7 @@ public class NotifyServiceImpl implements NotifyService {
         // if not empty, check if it is in 60s
         if (StringUtils.isNotBlank(cacheValue)) {
             long ttl = Long.parseLong(cacheValue.split("_")[1]);
-            if(CommonUntil.getCurrentTimestamp()-ttl<1000*60){
+            if (CommonUntil.getCurrentTimestamp() - ttl < 1000 * 60) {
                 log.info("repeat sent code in 60s");
                 return JsonData.buildResult(BizCodeEnum.CODE_LIMITED);
             }
@@ -58,9 +58,9 @@ public class NotifyServiceImpl implements NotifyService {
     public boolean checkCode(SentCodeEnum sentCodeEnum, String to, String code) {
         String cacheKey = String.format(CacheKey.CACHE_CODE_KEY, sentCodeEnum.name(), to);
         String cacheValue = redisTemplate.opsForValue().get(cacheKey);
-        if(StringUtils.isNotBlank(cacheValue)){
+        if (StringUtils.isNotBlank(cacheValue)) {
             String cacheCode = cacheValue.split("_")[0];
-            if(cacheCode.equals(code)){
+            if (cacheCode.equals(code)) {
                 redisTemplate.delete(cacheKey);
                 return true;
             }
