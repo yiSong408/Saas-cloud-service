@@ -1,15 +1,20 @@
 package net.cloud.util;
 
-import sun.security.provider.MD5;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.Random;
 import java.util.UUID;
 
-public class CommonUntil {
+@Slf4j
+public class CommonUtil {
     public static String getIpAddr(HttpServletRequest request) {
         String ipAddr = null;
         try {
@@ -58,7 +63,7 @@ public class CommonUntil {
         return null;
     }
 
-    public static String getRandomCode(int length){
+    public static String getRandomCode(int length) {
         String source = "0123456789";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
@@ -68,14 +73,16 @@ public class CommonUntil {
         return sb.toString();
     }
 
-    public static String generateUUid(){
-        return UUID.randomUUID().toString().replaceAll("-","").substring(0,32);
+    public static String generateUUid() {
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
     }
 
     public static long getCurrentTimestamp() {
         return System.currentTimeMillis();
     }
-    private static final String ALL_CHAR="1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    private static final String ALL_CHAR = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
     public static String getRandomString(int length) {
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
@@ -83,6 +90,17 @@ public class CommonUntil {
             sb.append(ALL_CHAR.charAt(random.nextInt(ALL_CHAR.length())));
         }
         return sb.toString();
+    }
+
+    public static void sendJsonObject(HttpServletResponse response, Object obj) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.setContentType("application/json; charset=utf-8");
+        try (PrintWriter writer = response.getWriter()) {
+            writer.print(objectMapper.writeValueAsString(obj));
+            response.flushBuffer();
+        } catch (IOException e) {
+            log.warn("response json obj exception: {}", e.toString());
+        }
     }
 }
 

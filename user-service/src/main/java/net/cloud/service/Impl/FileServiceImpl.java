@@ -3,7 +3,7 @@ package net.cloud.service.Impl;
 import lombok.extern.slf4j.Slf4j;
 import net.cloud.config.S3Config;
 import net.cloud.service.FileService;
-import net.cloud.util.CommonUntil;
+import net.cloud.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +44,7 @@ public class FileServiceImpl implements FileService {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String folder = now.format(dateTimeFormatter);
-        String fileName = CommonUntil.generateUUid();
+        String fileName = CommonUtil.generateUUid();
         String extensionName = originalFilename.substring(originalFilename.lastIndexOf("."));
         String newFileName = "user/" + folder + "/" + fileName + extensionName;
 

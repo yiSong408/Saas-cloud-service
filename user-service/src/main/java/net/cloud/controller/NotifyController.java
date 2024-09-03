@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.enums.SentCodeEnum;
 import net.cloud.service.NotifyService;
-import net.cloud.util.CommonUntil;
+import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -77,10 +77,10 @@ public class NotifyController {
     }
 
     private String getCaptchaKey(HttpServletRequest request) {
-        String ipAddr = CommonUntil.getIpAddr(request);
+        String ipAddr = CommonUtil.getIpAddr(request);
         String header = request.getHeader("User-Agent");
 
-        String key = "user-service:captcha:" + CommonUntil.MD5(ipAddr + header);
+        String key = "user-service:captcha:" + CommonUtil.MD5(ipAddr + header);
         return key;
     }
 

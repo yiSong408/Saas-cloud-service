@@ -1,6 +1,5 @@
 package net.cloud.service.Impl;
 
-import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import net.cloud.constant.CacheKey;
@@ -9,7 +8,7 @@ import net.cloud.enums.SentCodeEnum;
 import net.cloud.component.MailService;
 import net.cloud.service.NotifyService;
 import net.cloud.util.CheckUtil;
-import net.cloud.util.CommonUntil;
+import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +36,13 @@ public class NotifyServiceImpl implements NotifyService {
         // if not empty, check if it is in 60s
         if (StringUtils.isNotBlank(cacheValue)) {
             long ttl = Long.parseLong(cacheValue.split("_")[1]);
-            if (CommonUntil.getCurrentTimestamp() - ttl < 1000 * 60) {
+            if (CommonUtil.getCurrentTimestamp() - ttl < 1000 * 60) {
                 log.info("repeat sent code in 60s");
                 return JsonData.buildResult(BizCodeEnum.CODE_LIMITED);
             }
         }
-        String randomCode = CommonUntil.getRandomCode(6);
-        String value = randomCode + "_" + CommonUntil.getCurrentTimestamp();
+        String randomCode = CommonUtil.getRandomCode(6);
+        String value = randomCode + "_" + CommonUtil.getCurrentTimestamp();
         redisTemplate.opsForValue().set(cacheKey, value, CODE_EXPIRED, TimeUnit.MILLISECONDS);
         if (CheckUtil.isEmail(to)) {
             mailService.sendMail(to, SUBJECT, String.format(CONTENT, randomCode));

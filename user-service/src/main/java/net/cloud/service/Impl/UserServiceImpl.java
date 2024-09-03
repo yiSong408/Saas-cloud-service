@@ -5,13 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.enums.SentCodeEnum;
 import net.cloud.mapper.UserMapper;
+import net.cloud.model.LoginUser;
 import net.cloud.model.UserDO;
 import net.cloud.request.UserLoginRequest;
 import net.cloud.request.UserRegisterRequest;
 import net.cloud.service.NotifyService;
 import net.cloud.service.UserService;
-import net.cloud.util.CommonUntil;
+import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
+import net.cloud.util.JwtUtil;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
         userDO.setCreateTime(new Date());
         userDO.setSlogan("Default slogan");
 //        set password
-        userDO.setSecret("$1$" + CommonUntil.getRandomString(8));
+        userDO.setSecret("$1$" + CommonUtil.getRandomString(8));
         String cryptPwd = Md5Crypt.md5Crypt(registerRequest.getPwd().getBytes(), userDO.getSecret());
         userDO.setPwd(cryptPwd);
 
@@ -77,13 +79,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonData login(UserLoginRequest loginRequest) {
+    public JsonData login(UserLoginRequest loginRequest, String ipAddr) {
         List<UserDO> list = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", loginRequest.getEmail()));
         if(list!=null && list.size()==1){
-            String encodedPwd = Md5Crypt.md5Crypt(loginRequest.getPwd().getBytes(), list.get(0).getSecret());
-            if(encodedPwd.equals(list.get(0).getPwd())){
-                // login success
-                return JsonData.buildSuccess();
+            UserDO userDO = list.get(0);
+            String encodedPwd = Md5Crypt.md5Crypt(loginRequest.getPwd().getBytes(), userDO.getSecret());
+            if(encodedPwd.equals(userDO.getPwd())){
+                // login success, generate token
+                LoginUser loginUser = new LoginUser();
+                BeanUtils.copyProperties(userDO,loginUser);
+                loginUser.setIpAddr(ipAddr);
+                String token = JwtUtil.generateJsonWebToken(loginUser);
+
+                return JsonData.buildSuccess(token);
             }else{
                 return JsonData.buildResult(BizCodeEnum.ACCOUNT_PWD_ERROR);
             }

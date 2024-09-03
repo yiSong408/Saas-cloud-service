@@ -5,16 +5,20 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import lombok.extern.slf4j.Slf4j;
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.model.UserDO;
 import net.cloud.request.UserLoginRequest;
 import net.cloud.request.UserRegisterRequest;
 import net.cloud.service.FileService;
 import net.cloud.service.UserService;
+import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -25,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2024-08-13
  */
 @Api(tags = "User module")
+@Slf4j
 @RestController
 @RequestMapping("/api/user/v1/")
 public class UserController {
@@ -59,8 +64,9 @@ public class UserController {
     @ApiOperation("User login")
     @PostMapping("login")
     public JsonData login(@ApiParam("User login object")
-                          @RequestBody UserLoginRequest loginRequest){
-        return userService.login(loginRequest);
+                          @RequestBody UserLoginRequest loginRequest, HttpServletRequest request){
+        String ip = CommonUtil.getIpAddr(request);
+        return userService.login(loginRequest, ip);
     }
 
 

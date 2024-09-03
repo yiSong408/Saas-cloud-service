@@ -11,5 +11,5 @@ public interface UserService {
 
     JsonData register(UserRegisterRequest registerRequest);
 
-    JsonData login(UserLoginRequest loginRequest);
+    JsonData login(UserLoginRequest loginRequest, String ipAddr);
 }
