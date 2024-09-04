@@ -4,6 +4,7 @@ import net.cloud.model.UserDO;
 import net.cloud.request.UserLoginRequest;
 import net.cloud.request.UserRegisterRequest;
 import net.cloud.util.JsonData;
+import net.cloud.vo.UserVO;
 
 public interface UserService {
 
@@ -12,4 +13,6 @@ public interface UserService {
     JsonData register(UserRegisterRequest registerRequest);
 
     JsonData login(UserLoginRequest loginRequest, String ipAddr);
+
+    UserVO getUserDetail();
 }

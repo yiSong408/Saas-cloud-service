@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.enums.SentCodeEnum;
+import net.cloud.interceptor.LoginInterceptor;
 import net.cloud.mapper.UserMapper;
 import net.cloud.model.LoginUser;
 import net.cloud.model.UserDO;
@@ -14,6 +15,7 @@ import net.cloud.service.UserService;
 import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
 import net.cloud.util.JwtUtil;
+import net.cloud.vo.UserVO;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -98,6 +100,15 @@ public class UserServiceImpl implements UserService {
         }else{
          return JsonData.buildResult(BizCodeEnum.ACCOUNT_UNREGISTER);
         }
+    }
+
+    @Override
+    public UserVO getUserDetail() {
+        LoginUser loginUser = LoginInterceptor.threadLocal.get();
+        UserDO userDO = userMapper.selectById(loginUser.getId());
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userDO,userVO);
+        return userVO;
     }
 
     private boolean checkUnique(String mail) {

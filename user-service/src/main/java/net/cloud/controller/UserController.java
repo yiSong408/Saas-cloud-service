@@ -14,6 +14,7 @@ import net.cloud.service.FileService;
 import net.cloud.service.UserService;
 import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
+import net.cloud.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,6 +68,13 @@ public class UserController {
                           @RequestBody UserLoginRequest loginRequest, HttpServletRequest request){
         String ip = CommonUtil.getIpAddr(request);
         return userService.login(loginRequest, ip);
+    }
+
+    @ApiOperation("User detail info")
+    @GetMapping("detail")
+    public JsonData detail(){
+        UserVO userVO = userService.getUserDetail();
+        return JsonData.buildSuccess(userVO);
     }
 
 
