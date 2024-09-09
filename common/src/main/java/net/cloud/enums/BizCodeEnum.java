@@ -14,7 +14,8 @@ public enum BizCodeEnum {
     ACCOUNT_UNREGISTER(250002, "Account not exist"),
     ACCOUNT_PWD_ERROR(250003, "Username or password incorrect"),
     ACCOUNT_NOT_LOGIN(250004, "User not login"),
-    UPLOAD_USER_IMG_FILE_FAIL(600101, "Fail to upload user avtar");
+    UPLOAD_USER_IMG_FILE_FAIL(600101, "Fail to upload user avtar"),
+    ADDRESS_NOT_EXIST(290001, "Cannot find the address");
     @Getter
     private String message;
     @Getter
