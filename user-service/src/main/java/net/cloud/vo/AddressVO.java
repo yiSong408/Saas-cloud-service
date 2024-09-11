@@ -23,6 +23,5 @@ public class AddressVO {
     private String region;
     @JsonProperty("detailed_address")
     private String detailedAddress;
-    @JsonProperty("create_time")
-    private Date createTime;
+
 }

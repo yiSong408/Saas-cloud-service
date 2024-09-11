@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,7 +45,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressVO get(int addressId) {
-        AddressDO addressDO = addressMapper.selectOne(new QueryWrapper<AddressDO>().eq("id", addressId));
+        LoginUser loginUser = LoginInterceptor.threadLocal.get();
+        AddressDO addressDO = addressMapper.selectOne(new QueryWrapper<AddressDO>()
+                .eq("id", addressId)
+                .eq("user_id",loginUser.getId()));
         if(addressDO==null){
             return null;
         }
@@ -54,7 +59,22 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public int delete(int addressId) {
-        int row = addressMapper.delete(new QueryWrapper<AddressDO>().eq("id", addressId));
+        LoginUser loginUser = LoginInterceptor.threadLocal.get();
+        int row = addressMapper.delete(new QueryWrapper<AddressDO>()
+                .eq("id", addressId)
+                .eq("user_id",loginUser.getId()));
         return row;
+    }
+
+    @Override
+    public List<AddressVO> findAllUserAddress() {
+        LoginUser loginUser = LoginInterceptor.threadLocal.get();
+        List<AddressDO> list = addressMapper.selectList(new QueryWrapper<AddressDO>().eq("user_id", loginUser.getId()));
+        List<AddressVO> addressVOList = list.stream().map(obj -> {
+            AddressVO addressVO = new AddressVO();
+            BeanUtils.copyProperties(obj, addressVO);
+            return addressVO;
+        }).collect(Collectors.toList());
+        return addressVOList;
     }
 }
