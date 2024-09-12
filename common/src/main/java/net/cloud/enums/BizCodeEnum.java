@@ -15,7 +15,13 @@ public enum BizCodeEnum {
     ACCOUNT_PWD_ERROR(250003, "Username or password incorrect"),
     ACCOUNT_NOT_LOGIN(250004, "User not login"),
     UPLOAD_USER_IMG_FILE_FAIL(600101, "Fail to upload user avtar"),
-    ADDRESS_NOT_EXIST(290001, "Cannot find the address");
+    // address
+    ADDRESS_NOT_EXIST(290001, "Cannot find the address"),
+    // coupon
+    COUPON_NOT_EXIST(270001, "Do not have this coupon"),
+    COUPON_NO_STOCK(270002, "Do not have enough coupon"),
+    COUPON_OUT_OF_TIME(270003, "Coupon out of time range"),
+    COUPON_OUT_OF_LIMIT(270004, "Coupon out of amount limit");
     @Getter
     private String message;
     @Getter
