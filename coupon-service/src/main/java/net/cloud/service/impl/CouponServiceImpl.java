@@ -19,6 +19,8 @@ import net.cloud.service.CouponService;
 import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
 import net.cloud.vo.CouponVO;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,8 @@ public class CouponServiceImpl implements CouponService {
     private CouponMapper couponMapper;
     @Autowired
     private CouponRecordMapper couponRecordMapper;
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public Map<String, Object> getCouponPageData(int page, int size) {
@@ -56,24 +60,31 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public JsonData addCoupon(long couponId, CouponCategoryEnum category) {
         LoginUser loginUser = LoginInterceptor.threadLocal.get();
-        CouponDO couponDO = couponMapper.selectOne(new QueryWrapper<CouponDO>().eq("id", couponId).eq("category", category.name()));
+        String lockKey = "lock:coupon:" + couponId;
+        RLock rLock = redissonClient.getLock(lockKey);
+        rLock.lock();
+        try {
+            CouponDO couponDO = couponMapper.selectOne(new QueryWrapper<CouponDO>().eq("id", couponId).eq("category", category.name()));
 
-        this.checkCoupon(couponDO, loginUser.getId());
+            this.checkCoupon(couponDO, loginUser.getId());
 
-        CouponRecordDO couponRecordDO = new CouponRecordDO();
-        BeanUtils.copyProperties(couponDO, couponRecordDO);
-        couponRecordDO.setCreateTime(new Date());
-        couponRecordDO.setUseState(CouponStateEnum.NEW.name());
-        couponRecordDO.setUserId(loginUser.getId());
-        couponRecordDO.setUserName(loginUser.getName());
-        couponRecordDO.setCouponId(couponId);
-        couponRecordDO.setId(null);
+            CouponRecordDO couponRecordDO = new CouponRecordDO();
+            BeanUtils.copyProperties(couponDO, couponRecordDO);
+            couponRecordDO.setCreateTime(new Date());
+            couponRecordDO.setUseState(CouponStateEnum.NEW.name());
+            couponRecordDO.setUserId(loginUser.getId());
+            couponRecordDO.setUserName(loginUser.getName());
+            couponRecordDO.setCouponId(couponId);
+            couponRecordDO.setId(null);
 
-        int rows = couponMapper.reduceStock(couponId);
-        if (rows == 1) {
-            couponRecordMapper.insert(couponRecordDO);
-        } else {
-            throw new BizException(BizCodeEnum.COUPON_NO_STOCK);
+            int rows = couponMapper.reduceStock(couponId);
+            if (rows == 1) {
+                couponRecordMapper.insert(couponRecordDO);
+            } else {
+                throw new BizException(BizCodeEnum.COUPON_NO_STOCK);
+            }
+        } finally {
+            rLock.unlock();
         }
         return JsonData.buildSuccess();
     }
