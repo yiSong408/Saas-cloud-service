@@ -1,6 +1,7 @@
 package net.cloud.interceptor;
 
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import net.cloud.enums.BizCodeEnum;
 import net.cloud.model.LoginUser;
 import net.cloud.util.CommonUtil;
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+@Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
     public static ThreadLocal<LoginUser> threadLocal = new ThreadLocal<>();
     @Override

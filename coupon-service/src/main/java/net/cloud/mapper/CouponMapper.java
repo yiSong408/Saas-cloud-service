@@ -2,6 +2,7 @@ package net.cloud.mapper;
 
 import net.cloud.model.CouponDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,5 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CouponMapper extends BaseMapper<CouponDO> {
 
-    int reduceStock(int couponId);
+    int reduceStock(@Param("couponId") long couponId);
 }

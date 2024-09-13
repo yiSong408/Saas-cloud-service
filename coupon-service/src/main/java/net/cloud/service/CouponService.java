@@ -9,5 +9,5 @@ public interface CouponService {
     Map<String, Object> getCouponPageData(int page, int size);
 
 
-    JsonData addCoupon(int couponId, CouponCategoryEnum category);
+    JsonData addCoupon(long couponId, CouponCategoryEnum category);
 }

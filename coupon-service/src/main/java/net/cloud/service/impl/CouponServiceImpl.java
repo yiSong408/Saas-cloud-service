@@ -54,46 +54,48 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public JsonData addCoupon(int couponId, CouponCategoryEnum category) {
+    public JsonData addCoupon(long couponId, CouponCategoryEnum category) {
         LoginUser loginUser = LoginInterceptor.threadLocal.get();
         CouponDO couponDO = couponMapper.selectOne(new QueryWrapper<CouponDO>().eq("id", couponId).eq("category", category.name()));
-        this.checkCoupon(couponDO,loginUser.getId());
+
+        this.checkCoupon(couponDO, loginUser.getId());
 
         CouponRecordDO couponRecordDO = new CouponRecordDO();
-        BeanUtils.copyProperties(couponDO,couponRecordDO);
+        BeanUtils.copyProperties(couponDO, couponRecordDO);
         couponRecordDO.setCreateTime(new Date());
         couponRecordDO.setUseState(CouponStateEnum.NEW.name());
         couponRecordDO.setUserId(loginUser.getId());
         couponRecordDO.setUserName(loginUser.getName());
+        couponRecordDO.setCouponId(couponId);
         couponRecordDO.setId(null);
 
         int rows = couponMapper.reduceStock(couponId);
-        if(rows==1){
+        if (rows == 1) {
             couponRecordMapper.insert(couponRecordDO);
-        }else {
+        } else {
             throw new BizException(BizCodeEnum.COUPON_NO_STOCK);
         }
         return JsonData.buildSuccess();
     }
 
     private void checkCoupon(CouponDO couponDO, long userId) {
-        if(couponDO==null){
+        if (couponDO == null) {
             throw new BizException(BizCodeEnum.COUPON_NOT_EXIST);
         }
-        if(!couponDO.getPublish().equals(CouponPublishEnum.PUBLISH.name())){
+        if (!couponDO.getPublish().equals(CouponPublishEnum.PUBLISH.name())) {
             throw new BizException(BizCodeEnum.COUPON_NOT_EXIST);
         }
-        if(couponDO.getStock()<=0){
+        if (couponDO.getStock() <= 0) {
             throw new BizException(BizCodeEnum.COUPON_NO_STOCK);
         }
         long time = CommonUtil.getCurrentTimestamp();
         long startTime = couponDO.getStartTime().getTime();
         long endTime = couponDO.getEndTime().getTime();
-        if(startTime>time||time>endTime){
+        if (startTime > time || time > endTime) {
             throw new BizException(BizCodeEnum.COUPON_OUT_OF_TIME);
         }
-        Integer selectedUserCount = couponRecordMapper.selectCount(new QueryWrapper<CouponRecordDO>().eq("user_id", userId).eq("coupon_id",couponDO.getId()));
-        if(selectedUserCount>=couponDO.getUserLimit()){
+        Integer selectedUserCount = couponRecordMapper.selectCount(new QueryWrapper<CouponRecordDO>().eq("user_id", userId).eq("coupon_id", couponDO.getId()));
+        if (selectedUserCount >= couponDO.getUserLimit()) {
             throw new BizException(BizCodeEnum.COUPON_OUT_OF_LIMIT);
         }
     }

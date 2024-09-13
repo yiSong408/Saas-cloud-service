@@ -40,7 +40,7 @@ public class JwtUtil {
                     .getBody();
             return body;
         }catch (Exception e){
-            log.info("Jwt token verify failed");
+            log.info("Jwt token verify failed, {}",e.toString());
             return null;
         }
     }

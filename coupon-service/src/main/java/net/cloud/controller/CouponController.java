@@ -39,7 +39,7 @@ public class CouponController {
     }
     @ApiOperation("get a coupon")
     @GetMapping("add/{coupon_id}")
-    public JsonData addCouponRecord(@ApiParam("coupon id") @PathVariable("coupon_id") int couponId){
+    public JsonData addCouponRecord(@ApiParam("coupon id") @PathVariable("coupon_id") long couponId){
         return couponService.addCoupon(couponId, CouponCategoryEnum.PROMOTION);
     }
 }
