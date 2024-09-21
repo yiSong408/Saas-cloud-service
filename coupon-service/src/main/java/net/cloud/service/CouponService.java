@@ -1,6 +1,7 @@
 package net.cloud.service;
 
 import net.cloud.enums.CouponCategoryEnum;
+import net.cloud.request.NewUserCouponRequest;
 import net.cloud.util.JsonData;
 
 import java.util.Map;
@@ -10,4 +11,6 @@ public interface CouponService {
 
 
     JsonData addCoupon(long couponId, CouponCategoryEnum category);
+
+    JsonData initNewUserCoupon(NewUserCouponRequest newUserCouponRequest);
 }

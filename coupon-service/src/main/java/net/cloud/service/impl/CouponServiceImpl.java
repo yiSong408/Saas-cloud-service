@@ -15,6 +15,7 @@ import net.cloud.mapper.CouponRecordMapper;
 import net.cloud.model.CouponDO;
 import net.cloud.model.CouponRecordDO;
 import net.cloud.model.LoginUser;
+import net.cloud.request.NewUserCouponRequest;
 import net.cloud.service.CouponService;
 import net.cloud.util.CommonUtil;
 import net.cloud.util.JsonData;
@@ -30,6 +31,7 @@ import org.springframework.validation.BindException;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -58,6 +60,7 @@ public class CouponServiceImpl implements CouponService {
         }).collect(Collectors.toList()));
         return map;
     }
+
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Override
     public JsonData addCoupon(long couponId, CouponCategoryEnum category) {
@@ -88,6 +91,23 @@ public class CouponServiceImpl implements CouponService {
         } finally {
             rLock.unlock();
         }
+        return JsonData.buildSuccess();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Override
+    public JsonData initNewUserCoupon(NewUserCouponRequest newUserCouponRequest) {
+        LoginUser loginUser = new LoginUser();
+        loginUser.setId(newUserCouponRequest.getUserId());
+        loginUser.setName(newUserCouponRequest.getName());
+        LoginInterceptor.threadLocal.set(loginUser);
+
+        List<CouponDO> couponDOList = couponMapper.selectList(new QueryWrapper<CouponDO>().eq("category", CouponCategoryEnum.NEW_USER.name()));
+
+        for (CouponDO couponDO : couponDOList) {
+            this.addCoupon(couponDO.getId(), CouponCategoryEnum.NEW_USER);
+        }
+
         return JsonData.buildSuccess();
     }
 

@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import net.cloud.enums.CouponCategoryEnum;
+import net.cloud.request.NewUserCouponRequest;
 import net.cloud.service.CouponService;
 import net.cloud.util.JsonData;
 import org.apiguardian.api.API;
@@ -41,6 +42,12 @@ public class CouponController {
     @GetMapping("add/{coupon_id}")
     public JsonData addCouponRecord(@ApiParam("coupon id") @PathVariable("coupon_id") long couponId){
         return couponService.addCoupon(couponId, CouponCategoryEnum.PROMOTION);
+    }
+    @ApiOperation("RPC-new user register interface")
+    @PostMapping("/new_user_coupon")
+    public JsonData addNewUserCoupon(@ApiParam("user object") @RequestBody NewUserCouponRequest newUserCouponRequest){
+        JsonData jsonData = couponService.initNewUserCoupon(newUserCouponRequest);
+        return jsonData;
     }
 }
 
