@@ -32,7 +32,7 @@ public class CartServiceImpl implements CartService {
         long productId = cartItemRequest.getProductId();
         Integer amount = cartItemRequest.getAmount();
         BoundHashOperations<String, Object, Object> myCart = getMyCartOps();
-        Object cacheObj = myCart.get(productId);
+        Object cacheObj = myCart.get(Long.toString(productId));
         String result = "";
         if (cacheObj != null) {
             result = (String) cacheObj;
@@ -49,11 +49,11 @@ public class CartServiceImpl implements CartService {
             cartItemVO.setProductImg(productDetail.getCoverImg());
             cartItemVO.setSinglePrice(productDetail.getPrice());
 
-            myCart.put(productId, JSON.toJSONString(cartItemVO));
+            myCart.put(Long.toString(productId), JSON.toJSONString(cartItemVO));
         } else {
             CartItemVO cartItemVO = JSON.parseObject(result, CartItemVO.class);
-            cartItemVO.setAmount(cartItemVO.getAmount()+amount);
-            myCart.put(productId, JSON.toJSONString(cartItemVO));
+            cartItemVO.setAmount(cartItemVO.getAmount() + amount);
+            myCart.put(Long.toString(productId), JSON.toJSONString(cartItemVO));
         }
     }
 
