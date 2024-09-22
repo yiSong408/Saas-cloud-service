@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,17 @@ public class ProductServiceImpl implements ProductService {
     public ProductVO getProductDetail(long productId) {
         ProductDO productDO = productMapper.selectById(productId);
         return beanProcess(productDO);
+    }
+
+    @Override
+    public List<ProductVO> findProductByIdBatch(List<Long> productIdList) {
+        List<ProductDO> productDOList = productMapper.selectBatchIds(productIdList);
+        List<ProductVO> list = productDOList.stream().map(obj -> {
+            ProductVO productVO = new ProductVO();
+            BeanUtils.copyProperties(obj, productVO);
+            return productVO;
+        }).collect(Collectors.toList());
+        return list;
     }
 
     private ProductVO beanProcess(ProductDO productDO){

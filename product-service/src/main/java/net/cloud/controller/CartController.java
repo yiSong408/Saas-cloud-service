@@ -7,6 +7,7 @@ import lombok.Data;
 import net.cloud.request.CartItemRequest;
 import net.cloud.service.CartService;
 import net.cloud.util.JsonData;
+import net.cloud.vo.CartVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,12 @@ public class CartController {
     public JsonData clearCart(){
         cartService.clearCart();
         return JsonData.buildSuccess();
+    }
+    @ApiOperation("List all products in cart")
+    @GetMapping("list")
+    public JsonData getAllInCart(){
+        CartVO cartVO = cartService.listAll();
+        return JsonData.buildSuccess(cartVO);
     }
 
 }
