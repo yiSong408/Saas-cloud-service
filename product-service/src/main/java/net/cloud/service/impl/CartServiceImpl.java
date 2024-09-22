@@ -76,20 +76,38 @@ public class CartServiceImpl implements CartService {
         return cartVO;
     }
 
+    @Override
+    public void deleteItem(long productId) {
+        BoundHashOperations<String, Object, Object> myCartOps = getMyCartOps();
+        myCartOps.delete(Long.toString(productId));
+    }
+
+    @Override
+    public void updateToCart(CartItemRequest cartItemRequest) {
+        BoundHashOperations<String, Object, Object> myCartOps = getMyCartOps();
+        Object obj = myCartOps.get(Long.toString(cartItemRequest.getProductId()));
+        if (obj == null) {
+            throw new BizException(BizCodeEnum.CART_FAILURE);
+        }
+        CartItemVO cartItemVO = JSON.parseObject((String) obj, CartItemVO.class);
+        cartItemVO.setAmount(cartItemRequest.getAmount());
+        myCartOps.put(Long.toString(cartItemRequest.getProductId()), JSON.toJSONString(cartItemVO));
+    }
+
     private List<CartItemVO> buildCartItemList(boolean latestPrice) {
         BoundHashOperations<String, Object, Object> myCartOps = getMyCartOps();
         List<Object> objectList = myCartOps.values();
         List<CartItemVO> cartItemList = new ArrayList<>();
         List<Long> productIdList = new ArrayList<>();
 
-        for(Object item:objectList){
+        for (Object item : objectList) {
             CartItemVO cartItemVO = JSON.parseObject((String) item, CartItemVO.class);
             cartItemList.add(cartItemVO);
             productIdList.add(cartItemVO.getProductId());
         }
-        if(latestPrice){
+        if (latestPrice) {
             // get latest price
-            setProductLatestPrice(cartItemList,productIdList);
+            setProductLatestPrice(cartItemList, productIdList);
         }
         return cartItemList;
     }
@@ -97,7 +115,7 @@ public class CartServiceImpl implements CartService {
     private void setProductLatestPrice(List<CartItemVO> cartItemList, List<Long> productIdList) {
         List<ProductVO> productVOList = productService.findProductByIdBatch(productIdList);
         Map<Long, ProductVO> map = productVOList.stream().collect(Collectors.toMap(ProductVO::getId, Function.identity()));
-        cartItemList.stream().forEach(item->{
+        cartItemList.stream().forEach(item -> {
             ProductVO productVO = map.get(item.getProductId());
             item.setProductTitle(productVO.getTitle());
             item.setProductImg(productVO.getCoverImg());

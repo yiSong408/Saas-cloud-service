@@ -9,4 +9,8 @@ public interface CartService {
     void clearCart();
 
     CartVO listAll();
+
+    void deleteItem(long productId);
+
+    void updateToCart(CartItemRequest cartItemRequest);
 }

@@ -24,17 +24,32 @@ public class CartController {
         cartService.addToCart(cartItemRequest);
         return JsonData.buildSuccess();
     }
+
     @ApiOperation("clear my cart")
     @GetMapping("clear")
-    public JsonData clearCart(){
+    public JsonData clearCart() {
         cartService.clearCart();
         return JsonData.buildSuccess();
     }
+
     @ApiOperation("List all products in cart")
     @GetMapping("list")
-    public JsonData getAllInCart(){
+    public JsonData getAllInCart() {
         CartVO cartVO = cartService.listAll();
         return JsonData.buildSuccess(cartVO);
     }
 
+    @ApiOperation("delete product in cart")
+    @DeleteMapping("delete/{product_id}")
+    public JsonData delete(@ApiParam(value = "product id", required = true) @PathVariable("product_id") long productId) {
+        cartService.deleteItem(productId);
+        return JsonData.buildSuccess();
+    }
+
+    @ApiOperation("update product to cart")
+    @PostMapping("update")
+    public JsonData updateToCart(@ApiParam("product item") @RequestBody CartItemRequest cartItemRequest) {
+        cartService.updateToCart(cartItemRequest);
+        return JsonData.buildSuccess();
+    }
 }
