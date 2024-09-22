@@ -57,6 +57,11 @@ public class CartServiceImpl implements CartService {
         }
     }
 
+    @Override
+    public void clearCart() {
+        redisTemplate.delete(getCartKey());
+    }
+
     private BoundHashOperations<String, Object, Object> getMyCartOps() {
         String cartKey = getCartKey();
         return redisTemplate.boundHashOps(cartKey);
