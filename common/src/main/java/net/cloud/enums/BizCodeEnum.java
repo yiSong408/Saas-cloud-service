@@ -21,7 +21,8 @@ public enum BizCodeEnum {
     COUPON_NOT_EXIST(270001, "Do not have this coupon"),
     COUPON_NO_STOCK(270002, "Do not have enough coupon"),
     COUPON_OUT_OF_TIME(270003, "Coupon out of time range"),
-    COUPON_OUT_OF_LIMIT(270004, "Coupon out of amount limit");
+    COUPON_OUT_OF_LIMIT(270004, "Coupon out of amount limit"),
+    CART_FAILURE(220001, "Failed to add to cart");
     @Getter
     private String message;
     @Getter
